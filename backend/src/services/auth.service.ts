@@ -1,0 +1,28 @@
+import {
+  createNewUser,
+  findUserByEmail,
+  findUserByEmailWithPassword,
+} from "../dao/user.dao.js";
+import { ConflictError } from "../errors/ConflictError.js";
+import { UnauthorizedError } from "../errors/UnauthorizedError.js";
+
+export const registerUserService = async (
+  fullName: string,
+  email: string,
+  password: string
+) => {
+  const user = await findUserByEmail(email);
+  if (user) throw new ConflictError("User already exists!");
+
+  const newUser = await createNewUser(fullName, email, password);
+  return newUser;
+};
+
+export const loginUserService = async (email: string, password: string) => {
+  const user = await findUserByEmailWithPassword(email);
+  if (!user) throw new UnauthorizedError("Invalid credentails!");
+
+  const isPasswordValid = await user.comparePassword(password);
+  if (!isPasswordValid) throw new UnauthorizedError("Invalid credentails!");
+  return user;
+};
