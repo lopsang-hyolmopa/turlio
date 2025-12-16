@@ -5,6 +5,7 @@ import {
 } from "../dao/user.dao.js";
 import { ConflictError } from "../errors/ConflictError.js";
 import { UnauthorizedError } from "../errors/UnauthorizedError.js";
+import { signToken } from "../utils/helper.js";
 
 export const registerUserService = async (
   fullName: string,
@@ -24,5 +25,7 @@ export const loginUserService = async (email: string, password: string) => {
 
   const isPasswordValid = await user.comparePassword(password);
   if (!isPasswordValid) throw new UnauthorizedError("Invalid credentails!");
-  return user;
+
+  const token = signToken({ id: user._id.toString() });
+  return { user, token };
 };
