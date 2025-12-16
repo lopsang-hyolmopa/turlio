@@ -30,4 +30,4 @@ const urlSchema = new Schema(
   }
 );
 
-export const Url = new mongoose.Model("Url", urlSchema);
+export const Url = mongoose.model("Url", urlSchema);
