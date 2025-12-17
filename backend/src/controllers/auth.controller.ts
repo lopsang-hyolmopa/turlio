@@ -9,22 +9,27 @@ import { cookieOptions } from "../config/cookies.js";
 export const registerUser = async (req: Request, res: Response) => {
   const { fullName, email, password } = req.body;
 
-  const user = await registerUserService(fullName, email, password);
+  await registerUserService(fullName, email, password);
 
   res.status(200).json({
     message: "User registered!",
-    user,
   });
 };
 
 export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
-  const { user, token } = await loginUserService(email, password);
+  const { token } = await loginUserService(email, password);
   res.cookie("accessToken", token, cookieOptions);
 
   res.status(200).json({
     message: "Login sucess!",
-    user,
+  });
+};
+
+export const logoutUser = (req: Request, res: Response) => {
+  res.clearCookie("accessToken");
+  res.status(200).json({
+    message: "Logged out successfully!",
   });
 };
