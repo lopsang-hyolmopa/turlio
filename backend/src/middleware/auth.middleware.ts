@@ -18,7 +18,7 @@ export const authMiddleware = async (
     const user = await findUserById(decoded.id);
     if (!user) throw new NotFoundError("User not found!");
 
-    req.userId = user._id.toString();
+    req.user = user;
     next();
   } catch (error) {
     next(error);

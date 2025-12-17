@@ -1,15 +1,31 @@
 import { User } from "../models/user.model.js";
 
-export const findUserByEmail = async (email: string) => {
-  return await User.findOne({ email });
+interface FindUserOptions {
+  includePassword?: boolean;
+}
+
+export const findUserByEmail = async (
+  email: string,
+  options: FindUserOptions = {}
+) => {
+  const query = User.findOne({ email });
+
+  if (options.includePassword) {
+    query.select("+password");
+  }
+  return await query;
 };
 
-export const findUserByEmailWithPassword = async (email: string) => {
-  return await User.findOne({ email }).select("+password");
-};
+export const findUserById = async (
+  id: string,
+  options: FindUserOptions = {}
+) => {
+  const query = User.findById(id);
 
-export const findUserById = async (id: string) => {
-  return await User.findById(id);
+  if (options.includePassword) {
+    query.select("+password");
+  }
+  return await query;
 };
 
 export const createNewUser = async (
@@ -21,4 +37,16 @@ export const createNewUser = async (
   await newUser.save();
 
   return newUser;
+};
+
+export const updateUser = async (id: string, fullName: string) => {
+  const updatedUser = await User.findByIdAndUpdate(
+    id,
+    { fullName },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+  return updatedUser;
 };

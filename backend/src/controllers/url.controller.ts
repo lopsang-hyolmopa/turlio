@@ -4,15 +4,13 @@ import { createShortUrl } from "../services/url.service.js";
 import { getUrl } from "../dao/url.dao.js";
 import { NotFoundError } from "../errors/NotFoundError.js";
 import { SERVER_URL } from "../constants.js";
+import { getUserId } from "../utils/helper.js";
 
 export const generateShortUrl = async (req: Request, res: Response) => {
+  const userId = getUserId(req);
   const { originalUrl, customShortCode } = req.body;
-  const userId = req.userId;
-
-  if (!userId) throw new NotFoundError("UserId not found!");
 
   const shortCode = await createShortUrl(userId, originalUrl, customShortCode);
-
   res.status(200).json({ link: `${SERVER_URL}/${shortCode}` });
 };
 
