@@ -7,8 +7,11 @@ import { SERVER_URL } from "../constants.js";
 
 export const generateShortUrl = async (req: Request, res: Response) => {
   const { originalUrl, customShortCode } = req.body;
+  const userId = req.userId;
 
-  const shortCode = await createShortUrl(originalUrl);
+  if (!userId) throw new NotFoundError("UserId not found!");
+
+  const shortCode = await createShortUrl(userId, originalUrl, customShortCode);
 
   res.status(200).json({ link: `${SERVER_URL}/${shortCode}` });
 };

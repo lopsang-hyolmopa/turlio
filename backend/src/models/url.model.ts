@@ -20,7 +20,7 @@ const urlSchema = new Schema(
       type: Number,
       default: 0,
     },
-    uesr: {
+    user: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
