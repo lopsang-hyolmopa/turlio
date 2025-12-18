@@ -15,8 +15,8 @@ app.use(urlencoded({ extended: true, limit: "4kb" }));
 app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
-app.use("/api/url", urlRoutes);
-app.use("/api/user", userRoutes);
+app.use("/api/urls", urlRoutes);
+app.use("/api/users", userRoutes);
 app.get("/:shortCode", asyncHandler(redirectFromShortUrl));
 
 app.use(errorHandler);

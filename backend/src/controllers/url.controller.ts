@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import { createShortUrl } from "../services/url.service.js";
-import { getUrl } from "../dao/url.dao.js";
+import { fetchUrls, getUrl } from "../dao/url.dao.js";
 import { NotFoundError } from "../errors/NotFoundError.js";
 import { SERVER_URL } from "../constants.js";
 import { getUserId } from "../utils/helper.js";
@@ -23,4 +23,10 @@ export const redirectFromShortUrl = async (req: Request, res: Response) => {
   if (!url) throw new NotFoundError("Url does not exit!");
 
   res.redirect(url.originalUrl);
+};
+
+export const getAllUrls = async (req: Request, res: Response) => {
+  const userId = getUserId(req);
+  const urls = await fetchUrls(userId);
+  res.status(200).json({ message: "all urls fetched successfully!", urls });
 };
