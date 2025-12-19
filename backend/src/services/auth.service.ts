@@ -1,7 +1,4 @@
-import {
-  createNewUser,
-  findUserByEmail
-} from "../dao/user.dao.js";
+import { createNewUser, findUserByEmail } from "../dao/user.dao.js";
 import { ConflictError } from "../errors/ConflictError.js";
 import { UnauthorizedError } from "../errors/UnauthorizedError.js";
 import { signToken } from "../utils/helper.js";
@@ -15,7 +12,9 @@ export const registerUserService = async (
   if (user) throw new ConflictError("User already exists!");
 
   const newUser = await createNewUser(fullName, email, password);
-  return newUser;
+  const token = signToken({ id: newUser._id.toString() });
+
+  return { newUser, token };
 };
 
 export const loginUserService = async (email: string, password: string) => {
